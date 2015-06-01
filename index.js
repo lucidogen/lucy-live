@@ -166,6 +166,7 @@ const evalCode = function(h) {
     // Setup 'module' used inside evaluated code.
     self = new Module(h.path, h.caller_p ? Module._cache[h.caller_p] : null)
     self.filename = h.path
+    self.paths = Module._nodeModulePaths(lpath.dirname(self.filename))
     h.self = self
     h.dirname = lpath.dirname(h.path)
     h.require = function(path) {
