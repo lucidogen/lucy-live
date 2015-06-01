@@ -27,7 +27,7 @@ Usage example:
 ## Installation
 
 ```shell
-  npm install lucy-live --save
+  npm install lucidogen/lucy-live --save
 ```
 
 ## Tests
