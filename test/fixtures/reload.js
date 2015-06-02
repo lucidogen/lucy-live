@@ -1,8 +1,9 @@
 'use strict'
 
-const live = global.live_lib
+const live = require('../../index')
 
-let p = global.live_reload_prefix
+// Testing hack
+let p = live.live_reload_prefix
 
 live.path('./bar.js', function() {
   // If this callback stays alive, the value should change
@@ -10,7 +11,7 @@ live.path('./bar.js', function() {
   // prefix.
 
   // Callback executed, continue tests
-  global.live_reload_gen.next('bar:'+p)
+  live.live_reload_gen.next('bar:'+p)
 })
 
 // Return p to ensure file was properly run

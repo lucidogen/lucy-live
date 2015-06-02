@@ -128,10 +128,7 @@ describe('live', function() {
     let p_orig, rp_orig
 
     before(function(done) {
-      // TODO: Why do we have such problems using 'require' inside the loaded
-      // code ?
       live.clear()
-      global.live_lib = live
       fs.readFile(p, function(err, buf) {
         p_orig = buf
         fs.readFile(rp, function(err, buf) {
@@ -151,11 +148,11 @@ describe('live', function() {
     })
 
     after(function() {
-      delete global.live_lib
-      delete global.live_reload_1
-      delete global.live_reload_gen
-      delete global.live_reload_2
-      delete global.live_reload_3
+      delete live.live_lib
+      delete live.live_reload_1
+      delete live.live_reload_gen
+      delete live.live_reload_2
+      delete live.live_reload_3
     })
 
     it('should re-evaluate code on file change', function(done) {
@@ -186,24 +183,24 @@ describe('live', function() {
 
     it('should invalidate created callbacks on code reload', function(done) {
       let values = []
-      global.live_reload_prefix = 'live_reload_1'
+      live.live_reload_prefix = 'live_reload_1'
 
       // The generator is called inside 'bar.js' hook defined in 'reload.js'
-      global.live_reload_gen = function*() {
+      live.live_reload_gen = function*() {
         values.push(yield) // reload:live_reload_1
         values.push(yield) // bar:live_reload_1
 
         // after first read, we write new content on bar.js to
         // trigger hook created in reload.js
-        global.live_reload_prefix = 'live_reload_2'
+        live.live_reload_prefix = 'live_reload_2'
         fs.writeFile(p, '"This is barman."')
 
         // wait for second bar (live_reload_prefix captured and should not change)
         values.push(yield) // bar:live_reload_1
 
-        // hook triggered with saved global in reload.js
+        // hook triggered with saved global in reload.js (through live lib)
         // should not change anymore
-        global.live_reload_1 = 'FIXED:live_reload_1'
+        live.live_reload_1 = 'FIXED:live_reload_1'
 
         // Now we change 'reload.js' to install new hooks
         // saved global is now live_reload_2
@@ -215,7 +212,7 @@ describe('live', function() {
 
         // reload.js has been evaluated, we can now test
         // what happens if we touch bar.js
-        global.live_reload_prefix = 'live_reload_3'
+        live.live_reload_prefix = 'live_reload_3'
         fs.writeFile(p, '"This is barmaid."')
         values.push(yield)
         
@@ -232,11 +229,11 @@ describe('live', function() {
         done()
       }()
 
-      global.live_reload_gen.next()
+      live.live_reload_gen.next()
 
       live.require('./fixtures/reload', function(v) {
         // first trigger on 'reload.js' evaluation
-        global.live_reload_gen.next('reload:'+v)
+        live.live_reload_gen.next('reload:'+v)
       })
 
       live.watch('./fixtures')

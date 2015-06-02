@@ -25,7 +25,7 @@
 const caller = require('caller')
 const lpath  = require('path')
 const fs     = require('fs')
-const vm     = require('vm')
+const runInNewContext = require('vm').runInNewContext
 const Module = require('module')
 
 const lib = {}
@@ -173,22 +173,31 @@ const evalCode = function(h) {
       // Require inside the module to load 'children' code
       return Module._load(path, self)
     }
+    // Create first global field. Same as Module.require, global is only copied
+    // on code load (will not be updated during execution). This makes sense
+    // since the global content is not updated between modules.
+    let g = {}
+    for (var k in global) {
+      g[k] = global[k]
+    }
+    self.global = g
   }
   let sandbox =
     { require:h.require
-    , global:global
+    , global:     self.global
     , __filename: h.path
     , __dirname:  h.dirname
-    , console:console
-    , module:self
-    , exports:self.exports
+    , console:    console
+    , module:     self
+    , exports:    self.exports
+    , root:       root
     }
 
   CALLBACK_ORIGIN = h.path
     let rval
     try {
       h.error = null
-      rval = vm.runInNewContext(code, sandbox, {filename: h.path})
+      rval = runInNewContext(code, sandbox, {filename: h.path})
       if (!self.loaded) {
         self.loaded = true
         Module._cache[h.path] = self

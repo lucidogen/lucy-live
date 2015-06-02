@@ -3,7 +3,6 @@
 const bar = require('./bar.js')
 // to test require from node_modules
 const caller = require('caller')
-
 // test global variable leakage
 var live_foo = 'Changed inside foo.js'
 
