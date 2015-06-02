@@ -25,7 +25,8 @@
 const caller = require('caller')
 const lpath  = require('path')
 const fs     = require('fs')
-const runInNewContext = require('vm').runInNewContext
+const runInNewContext  = require('vm').runInNewContext
+const runInThisContext = require('vm').runInThisContext
 const Module = require('module')
 
 const lib = {}
@@ -138,8 +139,67 @@ const emptyClbk = function() {}
 // accordingly on evalCode
 let CALLBACK_ORIGIN
 
+let compileCode
+
+if (Module._contextLoad) {
+  compileCode = function(h) {
+    let self = h.self
+    if (!self.global) {
+      // Create first global field. Same as Module.require, global is only copied
+      // on code load (will not be updated during execution). This makes sense
+      // since the global content is not updated between modules.
+      let g = {}
+      for (var k in global) {
+        g[k] = global[k]
+      }
+      self.global = g
+    }
+    let sandbox =
+      { require:h.require
+      , global:     self.global
+      , __filename: h.path
+      , __dirname:  h.dirname
+      , console:    console
+      , module:     self
+      , exports:    self.exports
+      , root:       root
+      }
+    runInNewContext(h.readValue, sandbox, {filename: h.path}) 
+  }
+} else {
+  compileCode = function(h) {
+    let self = h.self
+    let require = h.require
+    let filename = h.path
+    let dirname  = h.dirname
+
+    // create wrapper function
+    let wrapper = Module.wrap(h.readValue)
+
+    let compiledWrapper = runInThisContext(wrapper, { filename: filename })
+
+    // What is this ? Leave as-is for the moment.
+    if (global.v8debug) {
+      if (!resolvedArgv) {
+        // we enter the repl if we're not given a filename argument.
+        if (process.argv[1]) {
+          resolvedArgv = Module._resolveFilename(process.argv[1], null)
+        } else {
+          resolvedArgv = 'repl'
+        }
+      }
+
+      // Set breakpoint on module start
+      if (filename === resolvedArgv) {
+        global.v8debug.Debug.setBreakPoint(compiledWrapper, 0, 0)
+      }
+    }
+    let args = [self.exports, require, self, filename, dirname]
+    return compiledWrapper.apply(self.exports, args)
+  }
+}
+
 const evalCode = function(h) {
-  let code = h.readValue
 
   // Clear callbakcs previously defined through eval (we do not want to
   // trigger callbacks in dead code).
@@ -173,41 +233,27 @@ const evalCode = function(h) {
       // Require inside the module to load 'children' code
       return Module._load(path, self)
     }
-    // Create first global field. Same as Module.require, global is only copied
-    // on code load (will not be updated during execution). This makes sense
-    // since the global content is not updated between modules.
-    let g = {}
-    for (var k in global) {
-      g[k] = global[k]
-    }
-    self.global = g
   }
-  let sandbox =
-    { require:h.require
-    , global:     self.global
-    , __filename: h.path
-    , __dirname:  h.dirname
-    , console:    console
-    , module:     self
-    , exports:    self.exports
-    , root:       root
-    }
-
+  
   CALLBACK_ORIGIN = h.path
     let rval
     try {
       h.error = null
-      rval = runInNewContext(code, sandbox, {filename: h.path})
+
+      compileCode(h)
+
       if (!self.loaded) {
         self.loaded = true
         Module._cache[h.path] = self
       }
+
       rval = self.exports
       h.evalValue = rval
+
     } catch(err) {
       h.error = err
     }
-  CALLBACK_ORIGIN = null
+  CALLBACK_ORIGIN = null    
 }
 
 const getType = function(p) {
