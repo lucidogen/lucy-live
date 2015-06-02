@@ -175,6 +175,13 @@ describe('live', function() {
       delete live.live_reload_3
     })
 
+    it('should watch "."', function(done) {
+      live.watch('.')
+      live.clear()
+      true.should.be.true
+      done()
+    })
+
     it('should re-evaluate code on file change', function(done) {
       let values = []
       let op = function*() {

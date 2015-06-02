@@ -9,9 +9,9 @@
     const live = require('lucy-live')
 
     // expects foo.js library to return "obj"
-    live.load('foo.js', function(obj) {
+    live.require('./foo.js', function(obj) {
       console.log('foo changed: ' + obj)
-    }
+    })
 
     live.path('image.jpg', function(p) {
       // do something with new image taking
@@ -360,7 +360,7 @@ const resolvePath = function(path, base) {
   if (path.charAt(0) === '/') {
     // absolute path
     filename = path
-  } else if (start == './' || start == '..') {
+  } else if (start == './' || start == '..' || path == '.') {
     filename = lpath.resolve(base, path)
   } else {
     // funky node_modules path not supported
