@@ -71,6 +71,26 @@ describe('live', function() {
       })
     })
 
+    if (require('module')._contextLoad) {
+      it('should not share global', function(done) {
+        global.live_global = 'Set in test.js'
+
+        live.require('./fixtures/global.js', function() {
+          global.live_global.should.equal('Set in test.js')
+          done()
+        })
+      })
+    } else {
+      it('should share global', function(done) {
+        global.live_global = 'Set in test.js'
+
+        live.require('./fixtures/global.js', function() {
+          global.live_global.should.equal('Changed inside global.js')
+          done()
+        })
+      })
+    }
+
     it('should reload with same module.exports', function(done) {
       live.clear()
       let values = []
