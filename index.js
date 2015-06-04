@@ -540,4 +540,7 @@ lib.once = function(callback) {
 }
  */
 
+lib.TimeRef  = require('./lib/TimeRef')
+lib.Smoother = require('./lib/Smoother')
+
 module.exports = lib
