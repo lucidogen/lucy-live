@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lucidogen/lucy-live.git"
+    "url": "git+ssh://git@bitbucket.org/lucidogen/lucy-live.git"
   },
   "keywords": [
     "live coding",
@@ -23,7 +23,7 @@
     }
   ],
   "bugs": {
-    "url": "https://github.com/lucidogen/lucy-live/issues"
+    "url": "https://bitbucket.com/lucidogen/lucy-live/issues"
   },
   "devDependencies": {
     "chai": "^2.3.0",
