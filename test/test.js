@@ -140,6 +140,12 @@ describe('live', function() {
         done()
       })
     })
+
+    it('should work without callback', function() {
+      live.require('./fixtures/bar.js')
+      true.should.be.true
+    })
+
   }) // #require
 
   describe('#watch', function() {

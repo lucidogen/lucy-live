@@ -31,6 +31,8 @@ const Module = require('module')
 
 const lib = {}
 
+const EMPTY_CALLBACK = function() {}
+
 /////////////////////////////// Private
 let ONCE_CACHE = {}
 
@@ -263,7 +265,7 @@ const getType = function(p) {
 const setupCallback = function(path, callback, handler, caller_p) {
   let clbk =
     { origin:   CALLBACK_ORIGIN
-    , callback: callback
+    , callback: callback || EMPTY_CALLBACK
     , handler:  handler
     }
 
