@@ -56,6 +56,11 @@ describe('live', function() {
       })
     })
 
+    it('should set cache for normal require', function() {
+      let foo = require('./fixtures/foo')
+      foo.v.should.equal(evalValue)
+    })
+
     it('should only evaluate code once', function(done) {
       live.require('./fixtures/foo', function(foo) {
         foo.v.should.equal(evalValue)
