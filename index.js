@@ -516,8 +516,11 @@ lib.watch = function(path) {
       if (!h) {
         // console.log('unknown changed file "'+p+'"')
       } else {
-        // console.log('Changed file "'+p+'"')
-        onChangedPath(h)
+        if (!statPath(p)) {
+          // File removed. Ignore. FIXME: Unload code ?
+        } else {
+          onChangedPath(h)
+        }
       }
     })
     WATCHED_PATHS[filename] = watcher
