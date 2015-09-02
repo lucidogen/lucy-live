@@ -40,12 +40,13 @@ Usage example:
   live.watch ( '.' )
   ```
 
-In order for the module itself to be updated, the module definition needs to
-take into account that it may be reloaded.
+The module definition needs to take into account that it may be reloaded by
+reusing `module.exports` and updating it. Simply exporting a new module will not
+work because the newly created module will not be linked to existing objects.
 
-Example of a module exporting a 'class' where methods are live coded. The code
-shown here is just one way to implement this behaviour. The only thing to notice
-is that `loaded` is false on first load and true on reload:
+Example of a module exporting a simple Person class where methods are live
+coded. The code shown here is just one way to implement this behaviour. The only
+thing to notice is that `loaded` is false on first load and true on reload:
 
   ```Javascript
   // Person.js
