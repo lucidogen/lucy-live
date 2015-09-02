@@ -1,18 +1,11 @@
 # Lucy Live [![Build Status](https://travis-ci.org/lucidogen/lucy-live.svg)](https://travis-ci.org/lucidogen/lucy-live)
 
-
-## Installation
-
-Currently only works with [**io.js**](https://iojs.org).
-
-  ```shell
-  npm install lucidogen/lucy-live --save
-  ```
+A live coding library. Part of [lucidity](http://lucidity.io) project.
 
 ## Live coding support for node.js
 
-Replace 'require' by 'live.require' to constantly update the required code as
-the source file changes.
+Replace 'require' by 'live.require' to constantly update the required code or
+assets as the source file changes.
 
 Usage example:
 
@@ -51,7 +44,7 @@ thing to notice is that `loaded` is false on first load and true on reload:
   ```Javascript
   // Person.js
 
-  if (!exports.loaded)
+  if ( ! exports.loaded )
   { // Initial code loading is used to create a simple function wrapping a call
     // to an initialize method.
     module.exports = function ()
@@ -140,6 +133,14 @@ Real world example of GLSL shader live coding (taken from
   
   ```
 
+## Installation
+
+Currently only works with [**io.js**](https://iojs.org).
+
+  ```shell
+  npm install lucy-live --save
+  ```
+
 ## Tests
 
   ```shell
@@ -154,4 +155,5 @@ Add unit tests for any new or changed functionality.
 
 ## Release History
 
-  * 0.1.0 Initial release
+  * 0.1.1 (2015-09-02) NPM readme fix.
+  * 0.1.0 (2015-09-02) Initial release.
