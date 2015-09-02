@@ -1,0 +1,6 @@
+== 0.1.0 2015-09-02
+
+  * Initial release.
+  * Support for CommonJS require style.
+  * Only works with io.js (using ES6 features).
+  * Implemented live #require, #path, #read, #clear and #watch.

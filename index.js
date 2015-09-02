@@ -36,7 +36,9 @@ const runInNewContext  = require ( 'vm' ).runInNewContext
 const runInThisContext = require ( 'vm' ).runInThisContext
 const Module = require ( 'module' )
 
-const lib = {}
+const lib =
+{ VERSION: '0.1.0'
+}
 
 const EMPTY_CALLBACK = function ()
 { }
