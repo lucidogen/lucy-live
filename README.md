@@ -9,7 +9,7 @@ assets as the source file changes.
 
 Usage example:
 
-  ```Javascript
+  ```js
   const live = require ( 'lucy-live' )
 
   // expects foo.js library to return "obj"
@@ -41,7 +41,7 @@ Example of a module exporting a simple Person class where methods are live
 coded. The code shown here is just one way to implement this behaviour. The only
 thing to notice is that `loaded` is false on first load and true on reload:
 
-  ```Javascript
+  ```js
   // Person.js
 
   if ( ! exports.loaded )
@@ -65,7 +65,7 @@ thing to notice is that `loaded` is false on first load and true on reload:
 
   Person usage:
 
-  ```Javascript
+  ```js
   const live   = require ( 'lucy-live' )
   const Person = live.require ( './Person' )
 
@@ -96,7 +96,7 @@ thing to notice is that `loaded` is false on first load and true on reload:
 Real world example of GLSL shader live coding (taken from
 [Lucidity](http://lucidity.io).
 
-  ```Javascript
+  ```js
   const ShaderEffect = require ( 'lucy-compose' ).ShaderEffect
   const THREE = require ( 'three' )
   const live  = require ( 'lucy-live' )
@@ -153,6 +153,7 @@ Add unit tests for any new or changed functionality.
 
 ## Release History
 
+  * 0.1.3 (2015-09-22) Better documentation.
   * 0.1.2 (2015-09-22) Compatible with latest version of node.js.
   * 0.1.1 (2015-09-02) NPM readme fix.
   * 0.1.0 (2015-09-02) Initial release.
