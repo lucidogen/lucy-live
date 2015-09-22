@@ -1,6 +1,6 @@
 {
   "name": "lucy-live",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A library for live coding.",
   "main": "index.js",
   "license": "MIT",

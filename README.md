@@ -1,6 +1,6 @@
 # Lucy Live [![Build Status](https://travis-ci.org/lucidogen/lucy-live.svg)](https://travis-ci.org/lucidogen/lucy-live)
 
-A live coding library. Part of [lucidity](http://lucidity.io) project.
+Part of [lucidity](http://lucidity.io) project.
 
 ## Live coding support for node.js
 
@@ -135,8 +135,6 @@ Real world example of GLSL shader live coding (taken from
 
 ## Installation
 
-Currently only works with [**io.js**](https://iojs.org).
-
   ```shell
   npm install lucy-live --save
   ```
@@ -144,7 +142,7 @@ Currently only works with [**io.js**](https://iojs.org).
 ## Tests
 
   ```shell
-   npm test
+  npm test
   ```
 
 ## Contributing
@@ -155,5 +153,6 @@ Add unit tests for any new or changed functionality.
 
 ## Release History
 
+  * 0.1.2 (2015-09-22) Compatible with latest version of node.js.
   * 0.1.1 (2015-09-02) NPM readme fix.
   * 0.1.0 (2015-09-02) Initial release.

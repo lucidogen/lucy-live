@@ -1,4 +1,10 @@
-== 0.1.1
+== 0.1.2 2015-09-22
+
+  * Compatible with latest node.js (ES6)
+
+== 0.1.1 2015-09-02
+
+  * NPM readme fix.
 
 == 0.1.0 2015-09-02
 

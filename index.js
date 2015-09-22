@@ -37,7 +37,7 @@ const runInThisContext = require ( 'vm' ).runInThisContext
 const Module = require ( 'module' )
 
 const lib =
-{ VERSION: '0.1.1'
+{ VERSION: '0.1.2'
 }
 
 const EMPTY_CALLBACK = function ()
@@ -108,15 +108,15 @@ const onChangedPath = function ( h )
   )
 }
 
-const triggerCallback = function ( clbk, error, value )
+const triggerCallback = function ( clbk, error, value, h )
 { try
   { if ( error )
     { if ( clbk.length > 1 )
       { clbk ( error )
       }
       else
-      { console.log ( error.toString () )
-        // console.log ( h.error.toString () , ` ( in '${h.path}' ) ` )
+      { console.log
+        ( `${ error.toString () } (${h.path}).` )
       }
     }
     else
@@ -136,20 +136,20 @@ const triggerCallback = function ( clbk, error, value )
 // Reloading code
 const HANDLERS =
 { read ( h, clbk )
-  { triggerCallback ( clbk, h.error, h.readValue )
+  { triggerCallback ( clbk, h.error, h.readValue, h )
   }
 , path ( h, clbk )
-  { triggerCallback ( clbk, h.error, h.path )
+  { triggerCallback ( clbk, h.error, h.path, h )
   }
 , eval:
   { js ( h, clbk )
     { if ( h.evalValue || h.error )
-      { triggerCallback ( clbk, h.error, h.evalValue )
+      { triggerCallback ( clbk, h.error, h.evalValue, h )
       }
       else
       { if ( h.readValue )
         { evalCode ( h )
-          triggerCallback ( clbk, h.error, h.evalValue )
+          triggerCallback ( clbk, h.error, h.evalValue, h )
         }
         else
         { // This is just in case we have a race condition where
@@ -160,7 +160,7 @@ const HANDLERS =
           ( function ( data )
             { h.readValue = data
               evalCode ( h )
-              triggerCallback ( clbk, h.error, h.evalValue )
+              triggerCallback ( clbk, h.error, h.evalValue, h )
             }
           )
         }
@@ -218,7 +218,7 @@ else
     let wrapper = Module.wrap ( h.readValue )
 
     let compiledWrapper = runInThisContext
-    ( wrapper, { filename: filename } )
+    ( wrapper, { filename: filename, displayErrors: true } )
 
     // What is this ? Leave as-is for the moment.
     if ( global.v8debug )
@@ -272,8 +272,8 @@ const evalCode = function ( h )
   h.error = null
 
   let self = h.self
-  if ( !self )
-{
+  if ( ! self )
+  {
     // Setup 'module' used inside evaluated code.
     self = new Module
     ( h.path, h.caller_p ? Module._cache [ h.caller_p ] : null )
@@ -283,8 +283,7 @@ const evalCode = function ( h )
     h.self = self
     h.dirname = lpath.dirname ( h.path )
     h.require = function ( path )
-{
-      // Require inside the module to load 'children' code
+    { // Require inside the module to load 'children' code
       return Module._load ( path, self )
     }
   }
@@ -296,17 +295,17 @@ const evalCode = function ( h )
 
       compileCode ( h )
 
-      if ( !self.loaded )
+      if ( ! self.loaded )
       { self.loaded = true
         Module._cache [ h.path ] = self
       }
 
       rval = self.exports
       h.evalValue = rval
-
     }
     catch ( err )
     { h.error = err
+      console.log ( err )
     }
   CALLBACK_ORIGIN = null
 }
