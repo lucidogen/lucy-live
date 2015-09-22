@@ -4,10 +4,16 @@ Part of [lucidity](http://lucidity.io) project.
 
 ## Live coding support for node.js
 
-Replace 'require' by 'live.require' to constantly update the required code or
-assets as the source file changes.
+Replace `require` by `live.require` to update the required code or assets as the
+source file changes.
 
-Usage example:
+## Installation
+
+  ```sh
+  npm install lucy-live --save
+  ```
+
+## Usage example
 
   ```js
   const live = require ( 'lucy-live' )
@@ -133,15 +139,10 @@ Real world example of GLSL shader live coding (taken from
   
   ```
 
-## Installation
-
-  ```shell
-  npm install lucy-live --save
-  ```
 
 ## Tests
 
-  ```shell
+  ```sh
   npm test
   ```
 
